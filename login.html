@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/icons-extra.css" />
+		<style type="text/css">
+			*,
+			body {
+				font-family: "微软雅黑";
+				background-color: white;
+			}
+			
+			.mui-input-row label {
+				color: #049AD2;
+				background-color: white;
+				width: 25%;
+			}
+			
+			.mui-input-row .mui-input {
+				background-color: white;
+				margin: 0px;
+				height: 100%;
+				width: 75%;
+				padding-left: 10px;
+			}
+			
+			.user-defined-login-button {
+				border-radius: 15px;
+				width: 82%;
+				height: 50px;
+				line-height: 45px;
+				text-align: center;
+				padding: 0;
+				margin: 30% auto 0px auto;
+				border: 0px;
+				background-color: #013F96;
+			}
+			.mui-input-group .mui-input-row:after{
+				right:15px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">登录</h1>
+	</header>-->
+	 <ul class="mui-table-view"> 
+        <li class="mui-table-view-cell mui-collapse">
+			<a class="mui-navigate-right " href="#">配置服务器</a>
+			<div class="mui-collapse-content">
+				<form class="mui-input-group">
+					<div class="mui-input-row">
+						<label>地址：</label>
+						<!--<input id="ServerIP" type="text" value="10.1.19.211:8021" class="mui-input-clear mui-input" placeholder="输入服务器地址">-->
+						<input id="ServerIP" type="text" value="192.168.100.231" class="mui-input-clear mui-input" placeholder="输入服务器地址">
+							
+					</div>
+				</form>
+			</div>
+		</li>
+    </ul>
+		<div style="width: 61%;margin: 20% auto 0px auto;">
+			<img src="images/ztlog.png" style="height:auto;width: 100%;">
+		</div>
+		<div style="margin: 3% auto 0px auto;">
+			<img src="images/login-style.png" style="height:auto;width: 100%;">
+		</div>
+		<div style="width: 100%;margin-top: 2%;">
+			<form id='login-form' class="mui-input-group">
+				<div class="mui-input-row">
+					<label><span class="mui-icon mui-icon-person"></span></label>
+					<input id='account' type="text" class="mui-input-clear mui-input" placeholder="请输入账号">
+				</div>
+				<div class="mui-input-row">
+					<label><span class="mui-icon mui-icon-locked"></span></label>
+					<input id='password' type="password" class="mui-input-clear mui-input" placeholder="请输入密码">
+				</div>
+			</form>
+			<div class="mui-content-padded">
+				<button id='login' class="mui-btn mui-btn-block mui-btn-primary user-defined-login-button">登&nbsp;&nbsp;录</button>
+				<div style="width:80%;margin:5% auto;text-align: center;color: #D70D18;font-weight: bold;">承载关爱<span style="margin-left: 10%;">成就价值</span></div>
+			</div>
+		</div>
+		<script src="js/address.js"></script>
+		<script src="js/mui.min.js"></script>
+		<script src="js/jquery/jquery.min.js?v=2.1.4"></script>
+		<script src="js/jquery/jquery.cookie.js"></script>
+		<script src="js/mui.enterfocus.js"></script>
+		<script src="js/versionsUpdate.js"></script>	
+		<script src="js/login.js"></script>	
+	</body>
+
+</html>
