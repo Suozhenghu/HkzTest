@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>过程检验-转序检</title>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/icons-extra.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.picker.min.css" />
+		<link href="../../css/bootstrap.min14ed.css" rel="stylesheet">
+		<link href="../../css/jqgrid/ui.jqgridffe4.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<link href="../../css/common2.css" rel="stylesheet">
+		<link href="../../css/app.css" rel="stylesheet" />
+		<link href="../../css/select2.css" rel="stylesheet" />
+	</head>
+	<style>
+		.white {
+			background-color: #ffffff !important
+		}
+		
+		.textPosition {
+			text-align: left !important;
+		}
+	</style>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<button id="back" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">返回主页</button>
+			<h1 class="mui-title">转序检</h1>
+		</header>
+		<div class="mui-content">
+			<div class="user-defined-content-f">
+				<div style="height: 3px;"></div>
+				<table>
+					<tr>
+						<th class="thWidth">选择车间:</th>
+						<td>
+							<select id="WsSelect">
+							</select>
+						</td>
+					</tr>
+					<tr style="height: 6px;"></tr>
+					<tr>
+						<th>产线:</th>
+						<td>
+							<select id="ddlMLine">
+							</select>
+						</td>
+					</tr>
+					<tr style="height: 6px;"></tr>
+					<tr>
+						<th>上线日期:</th>
+						<td>
+							<div class="mui-input-row">
+								<input type="text" id="productionDate" class="time" style="position: absolute;background-color: white;" data-options='{"type":"date"}'>
+								<label class="mui-btn mui-btn-link mui-pull-right" style="height: 40px;" id="btnClearDate">
+									<i class="glyphicon glyphicon-remove" style="color:#005592;top:6px;"></i>
+								</label>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<th>销售订单号：</th>
+						<td>
+							<input type="text" id="txtSaleOrderNbr">
+						</td>
+					</tr>
+					<tr>
+						<th>工单号：</th>
+						<td>
+							<div class="mui-input-row">
+								<input type="text" id="txtWorkOrder" placeholder="手动输入或扫描" style="position: absolute;background-color: white;">
+								<label class="mui-btn mui-btn-link mui-pull-right" id="scan1"><i class="mui-icon-extra mui-icon-extra-sweep" style="color:#005592;"></i></label>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<th>工单状态：</th>
+						<td>
+							<select id="ddlStatus">
+								<option value="-1">全部</option>
+								<option value="0">未开始</option>
+								<option value="1">已开始</option>
+								<option value="2">已结束</option>
+							</select>
+						</td>
+					</tr>
+					<tr style="height: 6px;"></tr>
+					<tr>
+						<th>车型:</th>
+						<td>
+							<select id="carType">
+							</select>
+						</td>
+					</tr>
+				</table>
+				<div class="mui-button-row">
+					<button type="button" class="mui-btn mui-btn-primary" id="search">查询</button>
+					<button type="button" class="mui-btn mui-btn-success" id="refresh" style="margin-left:25px">刷新</button>
+					<button type="button" class="mui-btn mui-btn-primary" id="btnSearchFinished" style="margin-left:15px">查看检验结果</button>
+				</div>
+			</div>
+			<div class="user-defined-title">
+				<span class="mui-pull-left">查询结果:</span>
+			</div>
+			<div class="user-defined-content">
+				<div style="overflow:auto;">
+					<table id="grid">
+					</table>
+				</div>
+				<div class="mui-button-row user-defined-footer-1">
+					<button type="button" class="mui-btn mui-btn-yellow" style="width: 100px;" id="btnLastPage">上一页</button>
+					<span style="border: 1px solid #B5B5B5;padding: 7px 15px;margin: 5px;line-height: 2.4;">
+						第<span id="LabPageIndex"></span>页 共<span id="labPageTotalCount"></span>页</span>
+					<button type="button" class="mui-btn mui-btn-yellow" style="width: 100px;" id="btnNextPage">下一页</button>
+				</div>
+			</div>
+		</div>
+		<div class="mui-modal" id="createProject">
+			<div style="font-size: 19px;text-align: center;margin-top: 20px;">添加新车型配置项</div>
+			<!-- 			<div>
+						<textarea id="paramId" rows="10" cols="500">
+							
+						</textarea>
+					</div> -->
+			<div>
+				<table style="margin-top: 50px;margin-left: 50px;">
+					<tr>
+						<th>车&nbsp;&nbsp;&nbsp;&nbsp;型:</th>
+						<td>
+							<input type="text" id="busType" readonly="readonly">
+						</td>
+					</tr>
+					<tr>
+						<th>承载方式:</th>
+						<td>
+							<table class="user-defined-table" style="border: 1px solid blue;border-collapse:separate">
+								<tr>
+									<td class="mui-input-row mui-radio mui-left white">
+										<label class="textPosition">全&nbsp;承&nbsp;载&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+										<input name="radio-czfs" id='cbFitFullLoadVehicle' type="radio" value="全承载"></td>
+									<td class="mui-input-row mui-radio mui-left white">
+										<label class="textPosition">&nbsp;前&nbsp;&nbsp;置&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+										<input name="radio-czfs" id='cbFitFrontVehicle' type="radio" value="前置">
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<th>动力类型:</th>
+						<td>
+							<table class="user-defined-table" style="border: 1px solid blue;border-collapse:separate;width: 100%;">
+								<tr>
+									<td class="mui-input-row mui-radio mui-left white">
+										<label class="textPosition">纯&nbsp;电&nbsp;动</label>
+										<input id='cbFitPureElectricVehicle' name="radio-ryfs" type="radio" value="纯电动"></td>
+									<td class="mui-input-row mui-radio mui-left white">
+										<label class="textPosition">&nbsp;燃&nbsp;&nbsp;油&nbsp;</label>
+										<input name="radio-ryfs" id='cbFitFuelVehicle' type="radio" value="燃油">
+									</td>
+								</tr>
+								<tr>
+									<td class="mui-input-row mui-radio mui-left white">
+										<label class="textPosition">气电混合</label>
+										<input name="radio-ryfs" id='cbFitGasElectricHybridVehicle' type="radio" value="气电混合"></td>
+									<td class="mui-input-row mui-radio mui-left white">
+										<label class="textPosition">油电混合</label>
+										<input name="radio-ryfs" id='cbFitHybridElectricVehicle' type="radio" value="油电混合">
+									</td>
+								</tr>
+								<tr>
+									<td class="mui-input-row mui-radio mui-left white">
+										<label class="textPosition">天&nbsp;然&nbsp;气</label>
+										<input name="radio-ryfs" id='cbFitNatureGasVehicle' type="radio" value="纯电动"></td>
+									<td class="mui-input-row mui-radio mui-left white">
+
+									</td>
+								</tr>
+
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<th>重&nbsp;要&nbsp;度:</th>
+						<td>
+							<table class="user-defined-table" style="border: 1px solid blue;border-collapse:separate;width: 100%;">
+								<tr>
+									<td class="mui-input-row mui-radio mui-left white">
+										<label class="textPosition">A</label>
+										<input name="radio-zydA" id="cbA" type="radio" checked="checked" value="A"></td>
+									<td class="mui-input-row mui-checkbox mui-left white">
+										<label class="textPosition">B1</label>
+										<input name="radio-zyd" id="cbB1" type="checkbox" value="B1">
+									</td>
+									<td class="mui-input-row mui-checkbox mui-left white">
+										<label class="textPosition">B2</label>
+										<input name="radio-zyd" id="cbB2" type="checkbox" value="B2">
+									</td>
+								</tr>
+								<tr>
+									<td class="mui-input-row mui-checkbox mui-left white">
+										<label class="textPosition">B3</label>
+										<input name="radio-zyd" id="cbB3" type="checkbox" value="B3"></td>
+									<td class="mui-input-row mui-checkbox mui-left white">
+										<label class="textPosition">B4</label>
+										<input name="radio-zyd" id="cbB4" type="checkbox" value="B4">
+									</td>
+									<td class="mui-input-row mui-checkbox mui-left white">
+										<label class="textPosition">B5</label>
+										<input name="radio-zyd" id="cbB5" type="checkbox" value="B5">
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<th>重要度使用次数:</th>
+						<td>
+							<table class="user-defined-table" style="border: 1px solid blue;border-collapse:separate;width: 100%;">
+								<tr>
+									<td class="mui-row mui-left">
+										<label>B1:</label>
+										<label id="labB1Count">0次</label>
+									</td>
+									<td class="mui-row mui-left">
+										<label>B2:</label>
+										<label id="labB2Count">0次</label>
+									</td>
+									<td>
+										<label>B3:</label>
+										<label id="labB3Count">0次</label>
+									</td>
+								</tr>
+								<tr>
+									<td class="mui-row mui-left">
+										<label>B4:</label>
+										<label id="labB4Count">0次</label>
+									</td>
+									<td>
+										<label>B5:</label>
+										<label id="labB5Count">0次</label>
+									</td>
+									<td></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+				<div class="mui-button-row" style="margin-top: 20px;">
+					<button type="button" id="modal_ok" class="mui-btn mui-btn-blue" style="width:21%">确定</button>
+					<button type="button" id="modal_close" class="mui-btn mui-btn-danger" style="width:21%;margin-left:25px">关闭</button>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/address.js"></script>
+		<script src="../../js/mui.enterfocus.js"></script>
+		<script src="../../js/jquery/jquery.min.js?v=2.1.4"></script>
+		<script src="../../js/jquery/jquery.cookie.js"></script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/select2.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/immersed.js"></script>
+		<script src="../../js/mui.picker.min.js"></script>
+		<script src="../../js/bootstrap/bootstrap.min.js?v=3.3.6"></script>
+		<script src="../../js/jqgrid/grid.locale-cnffe4.js"></script>
+		<script src="../../js/jqgrid/jquery.jqGrid.minffe4.js"></script>
+		<script src="../../js/LoginExtends.js"></script>
+		<script src="../../js/AjaxHTTPHandler.js"></script>
+		<script src="tranOrderMain.js"></script>
+		<script>
+			$.jgrid.defaults.styleUI = "Bootstrap";
+
+			function scaned(t, r, f) {
+				$("#txtWorkOrder").val(r);
+			}
+		</script>
+		<script>
+			window.addEventListener('refresh', function(e) { //执行刷新
+				location.reload();
+			});
+			(function($) {
+				var btns = $(".time");
+				btns.each(function(i, btn) {
+					btn.addEventListener('tap', function() {
+						var optionsJson = this.getAttribute('data-options') || '{}';
+						var options = JSON.parse(optionsJson);
+						var id = this.getAttribute('id');
+						/*
+						 * 首次显示时实例化组件
+						 * 示例为了简洁，将 options 放在了按钮的 dom 上
+						 * 也可以直接通过代码声明 optinos 用于实例化 DtPicker
+						 */
+						var picker = new $.DtPicker(options);
+						picker.show(function(rs) {
+							/*
+							 * rs.value 拼合后的 value
+							 * rs.text 拼合后的 text
+							 * rs.y 年，可以通过 rs.y.vaue 和 rs.y.text 获取值和文本
+							 * rs.m 月，用法同年
+							 * rs.d 日，用法同年
+							 * rs.h 时，用法同年
+							 * rs.i 分（minutes 的第二个字母），用法同年
+							 */
+							document.getElementById(id).value = rs.text;
+							/* 
+							 * 返回 false 可以阻止选择框的关闭
+							 * return false;
+							 */
+							/*
+							 * 释放组件资源，释放后将将不能再操作组件
+							 * 通常情况下，不需要示放组件，new DtPicker(options) 后，可以一直使用。
+							 * 当前示例，因为内容较多，如不进行资原释放，在某些设备上会较慢。
+							 * 所以每次用完便立即调用 dispose 进行释放，下次用时再创建新实例。
+							 */
+							//picker.dispose();
+						});
+					}, false);
+				});
+			})(mui);
+			mui.init();
+		</script>
+	</body>
+
+</html>
